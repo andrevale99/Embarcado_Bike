@@ -1,0 +1,20 @@
+#include "GPIO_Setup.h"
+
+void GPIO_setup(void)
+{
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+
+    GPIOC->BSRR |= GPIO_BSRR_BS13;
+
+    GPIOC->MODER |= GPIO_MODER_MODER13_0;
+    GPIOC->OTYPER |= 0; //PUSH-PULL
+    GPIOC->OSPEEDR |= 0; //LOW-SPEED
+    GPIOC->PUPDR |= 0; //NO PULL-UP or DOWN
+
+    GPIOC->BSRR |= GPIO_BSRR_BR13;
+}
+
+void EXTI15_10_IRQHandler(void)
+{
+
+}
