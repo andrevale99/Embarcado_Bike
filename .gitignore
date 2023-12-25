@@ -1,2 +1,7 @@
 .vscode/*
 Embarcado_Bike/.vscode/*
+
+*.elf
+*.hex
+*.bin
+*.o
