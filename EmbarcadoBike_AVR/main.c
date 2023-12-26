@@ -6,11 +6,19 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#include "LCD.h"
+#include "LCD.c"
+
+#define FOSC F_CPU // Clock Speed
+#define BAUD 9600
+#define MYUBRR FOSC/16/BAUD-1
 //======================================
 //  VARIAVEIS
 //======================================
+char *battery = "BAT\%: ";
+char *velocity = "m/s: ";
 
+uint8_t volatile vel = 0;
+uint16_t volatile bat = 0;
 //======================================
 //  PROTOTIPOS
 //======================================
@@ -39,7 +47,7 @@ int main()
  
   while(1)
   {
-
+    
   }
 
   return 0;
@@ -59,4 +67,11 @@ void ADC_setup()
 
 ISR(ADC_vect)
 {
+  static uint8_t adc_LSB;
+  static uint8_t adc_MSB;
+
+  adc_LSB = ADCL;
+  adc_MSB = ADCH;
+
+  bat = (adc_MSB << 8) | adc_LSB;
 }
