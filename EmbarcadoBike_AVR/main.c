@@ -6,7 +6,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#include "LCD.h"
+#include "LCD.c"
 
 
 int main()
