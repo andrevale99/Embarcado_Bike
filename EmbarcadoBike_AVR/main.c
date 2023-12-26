@@ -14,8 +14,18 @@
 //======================================
 //  PROTOTIPOS
 //======================================
+/**
+ * @brief Funcao para cnfiguracao do ADC
+*/
 void ADC_setup();
 
+/**
+ * @brief Interrupcao do ADC
+ * 
+ * @note ativada quando concluir a conversão ADC,
+ * para iniciar a conversão escrever 1 no bit
+ * ADSC do registrador ADCSRA
+*/
 ISR(ADC_vect);
 //======================================
 //  MAIN
@@ -37,6 +47,8 @@ int main()
 //======================================
 //  FUNCOES
 //======================================
+
+
 void ADC_setup()
 {
   ADMUX = ((1<<REFS0));
