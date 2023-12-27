@@ -28,17 +28,12 @@ volatile uint16_t  bat = 0;
 void ADC_setup();
 
 /**
- * @brief Funcao para c0nverter inteiro de 1 byte
- * para uma string
-*/
-void to_str(uint16_t value);
-
-/**
  * @brief Interrupcao do ADC
  * 
  * @note ativada quando concluir a conversão ADC,
  * para iniciar a conversão escrever 1 no bit
- * ADSC do registrador ADCSRA
+ * ADSC do registrador ADCSRA ou configurar o ADC
+ * no modo free running (olhar datasheet)
 */
 ISR(ADC_vect);
 //======================================
