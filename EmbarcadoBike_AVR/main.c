@@ -6,19 +6,19 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+//Biblioteca para usar o 'snprintf()'
+#include <stdio.h>
+
 #include "LCD.c"
 
-#define FOSC F_CPU // Clock Speed
-#define BAUD 9600
-#define MYUBRR FOSC/16/BAUD-1
 //======================================
 //  VARIAVEIS
 //======================================
-char *battery = "BAT\%: ";
+char *battery = "BAT%: ";
 char *velocity = "m/s: ";
 
-uint8_t volatile vel = 0;
-uint16_t volatile bat = 0;
+volatile uint8_t  vel = 0;
+volatile uint16_t  bat = 0;
 //======================================
 //  PROTOTIPOS
 //======================================
@@ -26,6 +26,12 @@ uint16_t volatile bat = 0;
  * @brief Funcao para cnfiguracao do ADC
 */
 void ADC_setup();
+
+/**
+ * @brief Funcao para c0nverter inteiro de 1 byte
+ * para uma string
+*/
+void to_str(uint16_t value);
 
 /**
  * @brief Interrupcao do ADC
@@ -44,10 +50,10 @@ int main()
   ADC_setup();
 
   sei();
- 
+
+  char buffer[5];
   while(1)
   {
-    
   }
 
   return 0;
@@ -63,6 +69,11 @@ void ADC_setup()
   ADCSRA = ((1<<ADEN) | 0x07 | (1<<ADIE));
 
   DIDR0 = 0x3E; //Somente o A0 está ativo
+}
+
+void to_str(uint16_t value)
+{
+
 }
 
 ISR(ADC_vect)
