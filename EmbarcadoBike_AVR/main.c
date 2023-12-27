@@ -45,8 +45,7 @@ int main()
   ADC_setup();
 
   sei();
-
-  char buffer[5];
+  
   while(1)
   {
   }
