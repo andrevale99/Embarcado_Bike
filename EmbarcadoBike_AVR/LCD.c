@@ -12,10 +12,10 @@
 #include <stdint.h>
 #include <util/delay.h>
 
-#define EN PB4 //Enable 
-#define RS PB5  //RS
-#define DDRx_LCD DDRB //DDRx em que os bits do~LCD estarao
-#define PORTx_LCD PORTB //PORTx em que os bits do LCD estarao
+#define EN PD4 //Enable 
+#define RS PD5  //RS
+#define DDRx_LCD DDRD //DDRx em que os bits do~LCD estarao
+#define PORTx_LCD PORTD //PORTx em que os bits do LCD estarao
 
 #define WRITE 1
 #define CMD 0
