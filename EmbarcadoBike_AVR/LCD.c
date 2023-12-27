@@ -56,6 +56,24 @@
 #define SET_DDRAM 0x80
 
 /**
+* @brief Inicializa o display LCD 16x2
+* no protocolo de 4 bits
+*/
+void init_4bitsLCD()
+{
+  DDRx_LCD |= (1<<EN) | (1<<RS) | 0x0F;
+
+  _delay_ms(40); //Estabilizacao do VCC do LCD (datasheet)
+
+  LCD_cmd(RETURN_HOME, 0); //
+  LCD_cmd(BITS_4 | LINES_2, 0); //interface de 4 bits 2 linhas (aqui se habilita as 2 linhas)
+                      //são enviados os 2 nibbles (0x2 e 0x8)
+  LCD_cmd(CLEAR_DISPLAY, 0); //limpa todo o display
+  LCD_cmd(DISPLAY_ON | CURSOR_ON, 0); //mensagem aparente cursor inativo não piscando
+  LCD_cmd(SET_DDRAM | 0x00, 0); //inicializa cursor na primeira posição a esquerda - 1a linha
+}
+
+/**
 * @brief Funcao para envio de comandos e escrita 
 * 
 * @param cmd -> O comando do LCD ou caractere que deseja escrever
@@ -87,23 +105,10 @@ void LCD_cmd(uint8_t cmd, uint8_t write_or_cmd)
   _delay_ms(10);
 }
 
-/**
-* @brief Inicializa o display LCD 16x2
-* no protocolo de 4 bits
-*/
-void init_4bitsLCD()
+void writeLCD(const char *str, const uint8_t size)
 {
-  DDRx_LCD |= (1<<EN) | (1<<RS) | 0x0F;
-
-  _delay_ms(40); //Estabilizacao do VCC do LCD (datasheet)
-
-  LCD_cmd(RETURN_HOME, 0); //
-  LCD_cmd(BITS_4 | LINES_2, 0); //interface de 4 bits 2 linhas (aqui se habilita as 2 linhas)
-                      //são enviados os 2 nibbles (0x2 e 0x8)
-  LCD_cmd(CLEAR_DISPLAY, 0); //limpa todo o display
-  LCD_cmd(DISPLAY_ON | CURSOR_ON, 0); //mensagem aparente cursor inativo não piscando
-  LCD_cmd(SET_DDRAM | 0x00, 0); //inicializa cursor na primeira posição a esquerda - 1a linha
+  for(uint8_t idx=0; idx < size; ++idx)
+    LCD_cmd(str[idx], WRITE);
 }
-
 
 #endif
