@@ -105,6 +105,12 @@ void LCD_cmd(uint8_t cmd, uint8_t write_or_cmd)
   _delay_ms(10);
 }
 
+/**
+ * @brief Funcao para escrever uma string no LCD
+ * 
+ * @param str -> Uma string do tipo char*, ponteiro de char
+ * @param size -> Tamanho da string
+*/
 void writeLCD(const char *str, const uint8_t size)
 {
   for(uint8_t idx=0; idx < size; ++idx)
