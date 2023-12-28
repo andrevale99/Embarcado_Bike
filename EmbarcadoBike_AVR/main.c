@@ -9,19 +9,22 @@
 //Biblioteca para usar o 'snprintf()'
 #include <stdio.h>
 
-#include "LCD.c"
+#include "LCD.h"
 
 //======================================
 //  VARIAVEIS
 //======================================
-char *battery = "BAT%: ";
-char *velocity = "m/s: ";
+char *battery = "BAT%:";
+char buffer[10];
+char *velocity = "m/s:";
 
 volatile uint8_t  vel = 0;
-volatile uint16_t  bat = 0;
+volatile uint32_t  bat = 0;
 //======================================
 //  PROTOTIPOS
 //======================================
+void setup();
+
 /**
  * @brief Funcao para cnfiguracao do ADC
 */
@@ -41,13 +44,22 @@ ISR(ADC_vect);
 //======================================
 int main()
 {
-  init_4bitsLCD();
-  ADC_setup();
+  
+  setup();
 
   sei();
-  
+
   while(1)
   {
+    ADCSRA |= (1<<ADSC);
+
+    writeLCD(battery, 5);
+
+    bat = (bat * 100) / 1023;
+    snprintf(buffer, 10, "%d", bat);
+    writeLCD(&buffer[0], 3);
+
+    LCD_cmd(RETURN_HOME, CMD);
   }
 
   return 0;
@@ -55,7 +67,12 @@ int main()
 //======================================
 //  FUNCOES
 //======================================
-
+void setup()
+{
+  ADC_setup();
+  UCSR0B = 0x00;
+  init_4bitsLCD();
+}
 
 void ADC_setup()
 {
@@ -63,11 +80,6 @@ void ADC_setup()
   ADCSRA = ((1<<ADEN) | 0x07 | (1<<ADIE));
 
   DIDR0 = 0x3E; //Somente o A0 está ativo
-}
-
-void to_str(uint16_t value)
-{
-
 }
 
 ISR(ADC_vect)
