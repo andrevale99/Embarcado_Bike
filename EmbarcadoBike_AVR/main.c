@@ -71,7 +71,7 @@ int main()
 void setup()
 {
   ADC_setup();
-  TIMER1_setup();
+  TIMER0_setup();
   UCSR0B = 0x00; //Desativa os RX r TX do MCU
   init_4bitsLCD();
 }
