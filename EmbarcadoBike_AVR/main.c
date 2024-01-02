@@ -58,7 +58,7 @@ int main()
   while(1)
   {
     writeLCD(battery, 5);
-    snprintf(buffer, 16, "%d ", TCNT0);
+    snprintf(buffer, 16, "%d ", bat);
     writeLCD(&buffer[0], 4);
     LCD_cmd(RETURN_HOME, CMD);
   }
@@ -92,7 +92,7 @@ void TIMER0_setup()
   TCCR0A = (1<<WGM01); //Pinos OC0x Desativados e na conf. CTC
   TCCR0B |= (1<<CS02) | (1<<(1<<CS00)); //Prescale de 256
 
-  OCR0A = 156;
+  OCR0A = 25;
 }
 
 ISR(ADC_vect)
