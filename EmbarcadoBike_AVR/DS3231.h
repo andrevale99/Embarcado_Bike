@@ -29,24 +29,27 @@
 /**
  * @brief Inicializa o protocolo I2C
  * 
- * @param pullup -> Se ativa o pullup dos pinos SCL e SDA
- *                  necessario para realizar a comunicacao
- *                  I2C
+ * @note NAO ATIVA os pullups do SCL e SDA
 */
-void init_i2c(uint8_t pullup = 0)
+void init_i2c()
 {
-    if(pullup)
-    {
-        I2C_DDR  &= ~((1<<SCL) | (1<<SDA));
-        I2C_PORT |= (1<<SCL) | (1<<SDA);
-    }
-    else
-        I2C_DDR  &= ~((1<<SCL) | (1<<SDA));
+    I2C_DDR  &= ~((1<<SCL) | (1<<SDA));
 
     //Ajuste da frequência de trabalho - SCL = F_CPU/(16+2.TWBR.Prescaler)
     TWBR = 18;
     TWSR |= 0x01;//prescaler = 4;
     TWCR |= (1<<TWINT) | (1<<TWEN) | (1<<TWIE); //habilita o TWI com interrupcao
+}
+
+/**
+ * @brief Inicializa o protocolo I2C
+ * 
+ * @note ATIVA os pullups do SCL e SDA
+*/
+void init_i2c_pullup()
+{
+    I2C_PORT |= (1<<SCL) | (1<<SDA);
+    init_i2c();
 }
 
 /**
