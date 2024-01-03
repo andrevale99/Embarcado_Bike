@@ -19,6 +19,12 @@
 #define WRITE 1
 #define READ 0
 
+#define I2C_DDR DDRC
+#define I2C_PORT PORTC
+
+#define SCL PC5
+#define SDA PC4
+
 void start_bit_i2c(uint8_t pullup)
 {
 
