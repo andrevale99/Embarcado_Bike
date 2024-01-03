@@ -55,11 +55,17 @@ int main()
 
   sei();
 
+  //Criar funcao para escrever a interface 
+  //do LCD, as frases que nao precisao ser
+  //atualizadas
+  writeLCD(battery_display,5);
+
   while(1)
   {
-    writeLCD(battery_display,5);
     snprintf(buffer, 16, "%d ", bat);
-    writeLCD(&buffer[0], 4);
+
+    LCD_cmd(SET_DDRAM | 5, CMD);
+    writeLCD(&buffer[0], 3);
 
     LCD_cmd(RETURN_HOME, CMD);
   }
