@@ -14,8 +14,8 @@
 //======================================
 //  VARIAVEIS
 //======================================
-const char *battery = "BAT%:";
-const char *velocity = "m/s:";
+const char *battery_display = "BAT%:";
+const char *velocity_display = "m/s:";
 
 volatile char buffer[16];
 
@@ -57,9 +57,10 @@ int main()
 
   while(1)
   {
-    writeLCD(battery, 5);
+    writeLCD(battery_display,5);
     snprintf(buffer, 16, "%d ", bat);
     writeLCD(&buffer[0], 4);
+
     LCD_cmd(RETURN_HOME, CMD);
   }
 
