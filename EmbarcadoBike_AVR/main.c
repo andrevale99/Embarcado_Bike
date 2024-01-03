@@ -17,7 +17,11 @@
 const char *battery_display = "BAT%:";
 const char *velocity_display = "m/s:";
 
-volatile char buffer[16];
+volatile struct buffer
+{
+  volatile char str[16];
+  volatile uint8_t size;
+}buffer;
 
 volatile uint8_t  vel = 0;
 volatile uint32_t  bat = 0;
@@ -62,10 +66,9 @@ int main()
 
   while(1)
   {
-    snprintf(buffer, 16, "%d ", bat);
-
+    buffer.size = snprintf(buffer.str, 16, "%d", bat);
     LCD_cmd(SET_DDRAM | 5, CMD);
-    writeLCD(&buffer[0], 3);
+    writeLCD(&buffer.str[0], buffer.size);
 
     LCD_cmd(RETURN_HOME, CMD);
   }
@@ -113,7 +116,7 @@ ISR(ADC_vect)
   bat = (adc_MSB << 8) | adc_LSB;
 
   bat = (bat * 100) / 1023;
-  snprintf(buffer, 16, "%d ", bat);
+  snprintf(buffer.str, 16, "%d ", bat);
 
   TIFR0 |= (1<<OCF0A);
 }
