@@ -89,7 +89,7 @@ void setup()
 void ADC_setup()
 {
   ADMUX = ((1<<REFS0)); //Referencia no AVCC
-  ADCSRA = ((1<<ADIE) | (1<<ADATE)| (0x07 << ADPS0)); //Prescale de 128
+  ADCSRA = ((1<<ADIE) | (1<<ADATE)| (0x07 << ADPS0)); //Prescale de 128 e auto trigger ativado
   ADCSRB |= (1 << ADTS1) | (1 << ADTS0); //Auto trigger do TIMER0 com COMPA
 
   DIDR0 = 0x3E; //Somente o A0 está ativo
