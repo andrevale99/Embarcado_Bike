@@ -10,6 +10,7 @@
 #include <stdio.h>
 
 #include "LCD.h"
+#include "DS3231.h"
 
 //======================================
 //  VARIAVEIS
@@ -23,8 +24,8 @@ volatile struct buffer
   volatile uint8_t size;
 }buffer;
 
-volatile uint8_t  vel = 0;
-volatile uint32_t  bat = 0;
+volatile uint8_t  vel = 255;
+volatile uint32_t  bat = 255;
 //======================================
 //  PROTOTIPOS
 //======================================
@@ -116,7 +117,6 @@ ISR(ADC_vect)
   bat = (adc_MSB << 8) | adc_LSB;
 
   bat = (bat * 100) / 1023;
-  snprintf(buffer.str, 16, "%d ", bat);
 
   TIFR0 |= (1<<OCF0A);
 }
