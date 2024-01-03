@@ -118,5 +118,8 @@ ISR(ADC_vect)
 
   bat = (bat * 100) / 1023;
 
+  //Desativa o bit do trigger do TIMER0
+  //necessário para realizar o proximo
+  //disparo (pag. 207 - 23.3 Start Conventions)
   TIFR0 |= (1<<OCF0A);
 }
