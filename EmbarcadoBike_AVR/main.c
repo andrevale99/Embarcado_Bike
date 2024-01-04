@@ -47,7 +47,9 @@ void TIMER0_setup();
  * @note ativada quando concluir a conversão ADC,
  * para iniciar a conversão escrever 1 no bit
  * ADSC do registrador ADCSRA ou configurar o ADC
- * no modo free running (olhar datasheet)
+ * no modo free running (olhar datasheet). No programa
+ * esta sendo utilizado no modo AUTO TRIGGER pela com-
+ * paracao com o TIMER0 e o OCR0A
 */
 ISR(ADC_vect);
 //======================================
