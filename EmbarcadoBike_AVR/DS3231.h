@@ -1,15 +1,14 @@
 #ifndef DS3231_H
 #define DS3231_H
 
-#ifndef F_CPU
-#define F_CPU 16000000UL
-#endif
-
-#include <stdint.h>
 /**
  * Biblioteca para realizar a comunicacao
  * com o RTC DS3231 usando I2C com interrupcao
 */
+
+#include <stdint.h>
+
+#include "TWI.h"
 
 #define ADDR_DS3231 0xD0
 #define WRITE 0
