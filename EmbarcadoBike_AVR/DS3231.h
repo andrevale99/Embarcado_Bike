@@ -4,7 +4,7 @@
 /**
  * Biblioteca para realizar a comunicacao
  * com o RTC DS3231 usando I2C com interrupcao
-*/
+ */
 
 #include <stdint.h>
 
@@ -22,6 +22,39 @@
 #define MONTH 0x05
 #define YEAR 0x06
 
+volatile struct DS3231_data
+{
+    volatile uint8_t data[7];
+    const uint8_t size = 7;
+}
 
+void
+get_clock()
+{
+    switch (TWSR & TW_STATUS_MASK)
+    {
+    case:
+        break;
+
+    default:
+        break;
+    }
+
+    TWCR |= (1 << TWINT);
+}
+
+void get_date()
+{
+    switch (TWSR & TW_STATUS_MASK)
+    {
+    case:
+        break;
+
+    default:
+        break;
+    }
+
+    TWCR |= (1 << TWINT);
+}
 
 #endif
