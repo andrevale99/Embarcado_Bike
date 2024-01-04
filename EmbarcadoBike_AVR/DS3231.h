@@ -28,8 +28,13 @@ volatile struct DS3231_data
     const uint8_t size = 7;
 }
 
-void
-get_clock()
+/**
+ * @brief Funcao para pegar somente os dados do
+ * relogio
+ * 
+ * @note Utilizado na interrupção do TWI
+*/
+void get_clock()
 {
     switch (TWSR & TW_STATUS_MASK)
     {
@@ -43,6 +48,12 @@ get_clock()
     TWCR |= (1 << TWINT);
 }
 
+/**
+ * @brief Funcao para pegar somente os dados da
+ * data (dia/mes/ano)
+ * 
+ * @note Utilizado na interrupção do TWI
+*/
 void get_date()
 {
     switch (TWSR & TW_STATUS_MASK)
