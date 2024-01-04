@@ -16,8 +16,8 @@
 */
 
 #define ADDR_DS3231 0xD0
-#define WRITE 1
-#define READ 0
+#define WRITE 0
+#define READ 1
 
 #define I2C_DDR DDRC
 #define I2C_PORT PORTC
