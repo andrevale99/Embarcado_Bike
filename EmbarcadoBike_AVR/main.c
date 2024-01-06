@@ -4,9 +4,6 @@
  * 
  * @brief Um embarcado simples para colocar na bicicleta.
  * Fazendo para aperfeicoar a programacao em baixo nivel
- * 
- * @bug Quando como utiliza o snprintf, quando reseta s
- * segundos, há um bug no ultimo digito, CORRIGIR
 */
 
 #ifndef F_CPU
@@ -74,26 +71,26 @@ int main()
 
   setup();
 
-  sei();
-
   // Criar funcao para escrever a interface
   // do LCD, as frases que nao precisao ser
   // atualizadas
   writeLCD(battery_display, 5);
 
+  sei();
+
   while (1)
   {
     i2c_start_bit();
     
-    buffer.size = snprintf(buffer.str, 16, "%d", bat);
+    buffer.size = snprintf(buffer.str, 16, "%d ", bat);
     LCD_cmd(SET_DDRAM | 5, CMD);
     writeLCD(&buffer.str[0], buffer.size);
     
     LCD_cmd(RETURN_HOME, CMD);
     LCD_cmd(SECOND_LINE, CMD);
 
-    buffer.size = snprintf(buffer.str, 16, "%x", ds3231_data.clock[0]);
-     writeLCD(&buffer.str[0], buffer.size);
+    buffer.size = snprintf(buffer.str, 16, "%x ", ds3231_data.clock[0]);
+    writeLCD(&buffer.str[0], buffer.size);
 
     LCD_cmd(RETURN_HOME, CMD);
 
