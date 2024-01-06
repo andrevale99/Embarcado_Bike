@@ -1,3 +1,14 @@
+/**
+ * @author Andre Menezes de Freitas Vale
+ * @version 1.0.0
+ * 
+ * @brief Um embarcado simples para colocar na bicicleta.
+ * Fazendo para aperfeicoar a programacao em baixo nivel
+ * 
+ * @bug Quando como utiliza o snprintf, quando reseta s
+ * segundos, há um bug no ultimo digito, CORRIGIR
+*/
+
 #ifndef F_CPU
 #define F_CPU 16000000UL
 #endif
