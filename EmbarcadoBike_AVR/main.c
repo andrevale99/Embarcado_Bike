@@ -81,8 +81,6 @@ int main()
   // atualizadas
   writeLCD(battery_display, 5);
 
-  ADCSRA &= ~(1<<ADIE);
-
   while (1)
   {
     i2c_start_bit();
