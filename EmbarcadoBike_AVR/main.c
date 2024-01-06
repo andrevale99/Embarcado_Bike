@@ -68,6 +68,8 @@ int main()
   // atualizadas
   writeLCD(battery_display, 5);
 
+  i2c_start_bit();
+
   while (1)
   {
     buffer.size = snprintf(buffer.str, 16, "%d", bat);
