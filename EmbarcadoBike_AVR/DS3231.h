@@ -70,12 +70,17 @@ void get_clock()
     case TW_MR_SLA_ACK:
         //Confirmacao que mandou o endereco do RTC
         //no modo READ
+        TWCR &= ~(1<<TWEA); //Manda um NACK
+        break;
+
+    case TW_MR_DATA_ACK:
+        //Colocar logica para receber mais
+        //bytes do RTC
         break;
 
     case TW_MR_DATA_NACK:
         ds3231_data.clock[0] = TWDR;
         i2c_stop_bit();
-        PORTB |= (1<<PB5);
         break; 
 
     case TW_SR_STOP:
