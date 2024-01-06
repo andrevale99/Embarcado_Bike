@@ -24,6 +24,8 @@ volatile struct Buffer
   volatile uint8_t size;
 } buffer;
 
+extern volatile struct ds3231_data;
+
 volatile uint8_t vel = 255;
 volatile uint32_t bat = 0;
 //======================================
@@ -68,15 +70,25 @@ int main()
   // atualizadas
   writeLCD(battery_display, 5);
 
-  i2c_start_bit();
+  ADCSRA &= ~(1<<ADIE);
 
   while (1)
   {
+    i2c_start_bit();
+    
     buffer.size = snprintf(buffer.str, 16, "%d", bat);
     LCD_cmd(SET_DDRAM | 5, CMD);
     writeLCD(&buffer.str[0], buffer.size);
+    
+    LCD_cmd(RETURN_HOME, CMD);
+    LCD_cmd(SECOND_LINE, CMD);
+
+    buffer.size = snprintf(buffer.str, 16, "%x", ds3231_data.clock[0]);
+     writeLCD(&buffer.str[0], buffer.size);
 
     LCD_cmd(RETURN_HOME, CMD);
+
+    _delay_ms(250);
   }
 
   return 0;
