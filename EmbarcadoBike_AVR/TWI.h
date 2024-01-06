@@ -49,8 +49,6 @@ void i2c_start_bit()
 
 /**
  * @brief Stop bit do I2C
- * 
- * @note Tambem serve para mandar o NACK
 */
 void i2c_stop_bit()
 {
