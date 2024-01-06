@@ -38,6 +38,9 @@ void init_i2c_pullup()
 
 /**
  * @brief Star bit do I2C
+ * 
+ * @note Tambem utilizado para mandar
+ * o REPEATED START
 */
 void i2c_start_bit()
 {
@@ -46,6 +49,8 @@ void i2c_start_bit()
 
 /**
  * @brief Stop bit do I2C
+ * 
+ * @note Tambem serve para mandar o NACK
 */
 void i2c_stop_bit()
 {
