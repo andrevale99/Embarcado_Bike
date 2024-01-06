@@ -37,11 +37,6 @@ volatile struct DS3231_data
     volatile uint8_t data[3];
 }ds3231_data;
 
-uint8_t situacion()
-{
-    return contador_de_bytes;
-}
-
 /**
  * @brief Funcao para pegar somente os dados do
  * relogio
@@ -53,12 +48,29 @@ void get_clock()
     switch (TWSR & TW_STATUS_MASK)
     {
     case TW_START:
-        TWCR &= ~(1<<TWSTA);
         TWDR = ADDR_DS3231 | WRITE;
+        TWCR &= ~(1<<TWSTA);
         break;
 
-    case:
+    case TW_MT_SLA_ACK:
+        TWDR = SECONDS;
         break;
+    
+    case TW_MT_DATA_ACK:
+        i2c_start_bit();
+        break;
+    
+    case TW_REP_START:
+        TWDR = ADDR_DS3231 | READ;
+        TWCR &= ~(1<<TWSTA);
+        break;
+
+    case TW_MR_SLA_ACK:
+        //Confirmacao que mandou o endereco do RTC
+        //no modo READ
+        break;
+
+    case TW_MR_DATA_NACK:
 
     default:
         //Condicao para dizer que houve algum erro
