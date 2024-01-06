@@ -77,11 +77,11 @@ int main()
   writeLCD(battery_display, 5);
 
   sei();
-
+  
   while (1)
   {
     i2c_start_bit();
-    
+
     buffer.size = snprintf(buffer.str, 16, "%d ", bat);
     LCD_cmd(SET_DDRAM | 5, CMD);
     writeLCD(&buffer.str[0], buffer.size);
@@ -89,6 +89,10 @@ int main()
     LCD_cmd(RETURN_HOME, CMD);
     LCD_cmd(SECOND_LINE, CMD);
 
+    buffer.size = snprintf(buffer.str, 16, "%x:", ds3231_data.clock[2]);
+    writeLCD(&buffer.str[0], buffer.size);
+    buffer.size = snprintf(buffer.str, 16, "%x:", ds3231_data.clock[1]);
+    writeLCD(&buffer.str[0], buffer.size);
     buffer.size = snprintf(buffer.str, 16, "%x ", ds3231_data.clock[0]);
     writeLCD(&buffer.str[0], buffer.size);
 
