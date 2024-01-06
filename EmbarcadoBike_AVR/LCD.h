@@ -106,7 +106,7 @@ void LCD_cmd(uint8_t cmd, uint8_t write_or_cmd)
   if(write_or_cmd == WRITE)
     PORTx_LCD &= ~ (1<<RS);		/* RS=0, command reg. */
 
-  _delay_ms(10);
+  _delay_ms(50);
 }
 
 void writeLCD(const char *str, const uint8_t size)
