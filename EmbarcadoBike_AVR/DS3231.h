@@ -7,9 +7,11 @@
 */
 
 /**
- * CORRIGIR A FUNÇÂO DE LEITURA DO CLOCK
- * DEVE REALIZAR UMA OPERACAO DE ESCRITA
- * PARA DEPOIS REALIZAR A LEITURA
+ * Organizar código para uma melhor legibilidade
+ * e tratamento de erros
+ * 
+ * Como utiliza-se do snprintf para gravar no LCD
+ * ha um BUG quando reseta os segundos (CORRIGIR)
 */
 
 #include <stdint.h>
@@ -71,6 +73,14 @@ void get_clock()
         break;
 
     case TW_MR_DATA_NACK:
+        ds3231_data.clock[0] = TWDR;
+        i2c_stop_bit();
+        PORTB |= (1<<PB5);
+        break; 
+
+    case TW_SR_STOP:
+        
+        break;
 
     default:
         //Condicao para dizer que houve algum erro
