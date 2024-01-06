@@ -4,7 +4,13 @@
 /**
  * Biblioteca para realizar a comunicacao
  * com o RTC DS3231 usando I2C com interrupcao
- */
+*/
+
+/**
+ * CORRIGIR A FUNÇÂO DE LEITURA DO CLOCK
+ * DEVE REALIZAR UMA OPERACAO DE ESCRITA
+ * PARA DEPOIS REALIZAR A LEITURA
+*/
 
 #include <stdint.h>
 
