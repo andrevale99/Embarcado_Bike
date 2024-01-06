@@ -52,6 +52,12 @@ void TIMER0_setup();
  * paracao com o TIMER0 e o OCR0A
  */
 ISR(ADC_vect);
+
+/**
+ * @brief interupcao para pegar os dados do RTC
+ * DS3231 usando o I2C
+*/
+ISR(TWI_vect);
 //======================================
 //  MAIN
 //======================================
@@ -87,6 +93,7 @@ void setup()
   TIMER0_setup();
   UCSR0B = 0x00; // Desativa os RX r TX do MCU
   init_4bitsLCD();
+  init_i2c();
 }
 
 void ADC_setup()
@@ -128,4 +135,9 @@ ISR(ADC_vect)
   TIFR0 |= (1 << OCF0A);
 
   SREG = sreg;
+}
+
+ISR(TWI_vect)
+{
+  get_clock();
 }
