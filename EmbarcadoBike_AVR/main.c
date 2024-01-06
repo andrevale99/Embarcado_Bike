@@ -25,7 +25,7 @@ volatile struct Buffer
 } buffer;
 
 volatile uint8_t vel = 255;
-volatile uint32_t bat = 255;
+volatile uint32_t bat = 0;
 //======================================
 //  PROTOTIPOS
 //======================================
