@@ -42,21 +42,16 @@ void ADC_setup();
 void TIMER0_setup();
 
 /**
- * @brief Interrupcao do ADC
+ * @brief Funcoes de interrupcoes
  *
- * @note ativada quando concluir a conversão ADC,
- * para iniciar a conversão escrever 1 no bit
- * ADSC do registrador ADCSRA ou configurar o ADC
- * no modo free running (olhar datasheet). No programa
- * esta sendo utilizado no modo AUTO TRIGGER pela com-
- * paracao com o TIMER0 e o OCR0A
+ * @param ADC_vect Interrupcao do ADC. No programa esta 
+ * sendo utilizado no modo AUTO TRIGGER 
+ * pela comparacao com o TIMER0 e o OCR0A
+ * 
+ * @param TWI_vect Intterupcao do I2C (TWI). Usado para pegar
+ * os dados do relogio
  */
 ISR(ADC_vect);
-
-/**
- * @brief interupcao para pegar os dados do RTC
- * DS3231 usando o I2C
-*/
 ISR(TWI_vect);
 //======================================
 //  MAIN
