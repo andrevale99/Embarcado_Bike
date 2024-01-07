@@ -18,9 +18,7 @@
 
 #include "TWI.h"
 
-#define ADDR_DS3231 0xD0
-#define WRITE 0
-#define READ 1
+#define DS3231_ADDR 0xD0
 
 #define SECONDS 0x00
 #define MINUTES 0x01
@@ -30,8 +28,7 @@
 #define MONTH 0x05
 #define YEAR 0x06
 
-volatile uint8_t idx_data = 0;
-volatile uint8_t read_flag = 0;
+volatile uint8_t flag_conclusion = 0;
 
 volatile struct DS3231_data
 {
@@ -50,7 +47,7 @@ void get_clock()
     switch (TWSR & TW_STATUS_MASK)
     {
     case TW_START:
-        TWDR = ADDR_DS3231 | WRITE;
+        TWDR = DS3231_ADDR | TW_WRITE;
         TWCR &= ~(1<<TWSTA);
         break;
 
@@ -63,12 +60,11 @@ void get_clock()
         break;
     
     case TW_REP_START:
-        TWDR = ADDR_DS3231 | READ;
+        TWDR = DS3231_ADDR | TW_READ;
         TWCR &= ~(1<<TWSTA);
         break;
 
     case TW_MR_SLA_ACK:
-        PORTB |= (1<<PB5);
         //Confirmacao que mandou o endereco do RTC
         //no modo READ
         //TWCR &= ~(1<<TWEA); //Manda um NACK
@@ -83,10 +79,6 @@ void get_clock()
         ds3231_data.clock[0] = TWDR;
         i2c_stop_bit();
         break; 
-
-    case TW_SR_STOP:
-        
-        break;
 
     default:
         //Condicao para dizer que houve algum erro
