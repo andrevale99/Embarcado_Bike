@@ -52,6 +52,12 @@ void ADC_setup();
 void TIMER0_setup();
 
 /**
+ * @brief Funcao para atualizar 
+ * os dados necessarios
+*/
+void refresh_data();
+
+/**
  * @brief Funcoes de interrupcoes
  *
  * @param ADC_vect Interrupcao do ADC. No programa esta 
@@ -77,26 +83,12 @@ int main()
   writeLCD(battery_display, 5);
 
   sei();
-  
+
   while (1)
-  {
+  { 
     i2c_start_bit();
 
-    buffer.size = snprintf(buffer.str, 16, "%d ", bat);
-    LCD_cmd(SET_DDRAM | 5, CMD);
-    writeLCD(&buffer.str[0], buffer.size);
-    
-    LCD_cmd(RETURN_HOME, CMD);
-    LCD_cmd(SECOND_LINE, CMD);
-
-    buffer.size = snprintf(buffer.str, 16, "%x:", ds3231_data.clock[2]);
-    writeLCD(&buffer.str[0], buffer.size);
-    buffer.size = snprintf(buffer.str, 16, "%x:", ds3231_data.clock[1]);
-    writeLCD(&buffer.str[0], buffer.size);
-    buffer.size = snprintf(buffer.str, 16, "%x ", ds3231_data.clock[0]);
-    writeLCD(&buffer.str[0], buffer.size);
-
-    LCD_cmd(RETURN_HOME, CMD);
+    refresh_data();
 
     _delay_ms(250);
   }
@@ -108,10 +100,14 @@ int main()
 //======================================
 void setup()
 {
+  // Desativa os RX r TX do MCU para
+  //utilizar os pinos PD0 (RX) e PD1 (TX)
+  //do LCD, se n fica bugando
+  UCSR0B = 0x00;
+
   ADC_setup();
   TIMER0_setup();
   init_4bitsLCD();
-  UCSR0B = 0x00; // Desativa os RX r TX do MCU
   init_i2c();
 }
 
@@ -132,6 +128,25 @@ void TIMER0_setup()
   TCCR0B |= (1 << CS02) | (1 << (1 << CS00)); // Prescale de 256
 
   OCR0A = 25;
+}
+
+void refresh_data()
+{
+  buffer.size = snprintf(buffer.str, 16, "%d ", bat);
+  LCD_cmd(SET_DDRAM | 5, CMD);
+  writeLCD(&buffer.str[0], buffer.size);
+    
+  LCD_cmd(RETURN_HOME, CMD);
+  LCD_cmd(SECOND_LINE, CMD);
+
+  buffer.size = snprintf(buffer.str, 16, "%x:", ds3231_data.clock[2]);
+  writeLCD(&buffer.str[0], buffer.size);
+  buffer.size = snprintf(buffer.str, 16, "%x:", ds3231_data.clock[1]);
+  writeLCD(&buffer.str[0], buffer.size);
+  buffer.size = snprintf(buffer.str, 16, "%x ", ds3231_data.clock[0]);
+  writeLCD(&buffer.str[0], buffer.size);
+
+  LCD_cmd(RETURN_HOME, CMD);
 }
 
 ISR(ADC_vect)
@@ -158,5 +173,4 @@ ISR(ADC_vect)
 
 ISR(TWI_vect)
 {
-  get_clock();
 }
