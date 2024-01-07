@@ -69,9 +69,9 @@ void init_4bitsLCD()
   pulseEN();
   _delay_ms(10);
 
-  LCD_cmd(RETURN_HOME, CMD); //
   LCD_cmd(BITS_4 | LINES_2, CMD); //interface de 4 bits 2 linhas (aqui se habilita as 2 linhas)
-                      //são enviados os 2 nibbles (0x2 e 0x8)
+                                  //são enviados os 2 nibbles (0x2 e 0x8)
+  LCD_cmd(RETURN_HOME, CMD); //
   LCD_cmd(CLEAR_DISPLAY, CMD); //limpa todo o display
   LCD_cmd(DISPLAY_ON, CMD); //mensagem aparente cursor inativo não piscando
   LCD_cmd(SET_DDRAM | 0x00, CMD); //inicializa cursor na primeira posição a esquerda - 1a linha
