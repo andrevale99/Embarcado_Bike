@@ -7,6 +7,10 @@
  *
  * @implements Criar uma logica para nao utilizar os delay
  * para obter os dados do DS3231 (RTC)
+ * 
+ * @implements Ha um bug que o LCD as vezes nao inicializa
+ * direito, nao escreve ao resetar o arduino (testado somente
+ * em protoboard)
  */
 
 #ifndef F_CPU
@@ -83,7 +87,7 @@ int main()
   // atualizadas
   writeLCD(battery_display, 5);
   LCD_cmd(SET_DDRAM | 9, CMD);
-  writeLCD(velocity_display, 5);
+  writeLCD(velocity_display, 4);
 
   sei();
 
