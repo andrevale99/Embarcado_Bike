@@ -105,7 +105,7 @@ void init_4bitsLCD()
                                   //são enviados os 2 nibbles (0x2 e 0x8)
   LCD_cmd(RETURN_HOME, CMD); //
   LCD_cmd(CLEAR_DISPLAY, CMD); //limpa todo o display
-  LCD_cmd(DISPLAY_ON, CMD); //mensagem aparente cursor inativo não piscando
+  LCD_cmd(DISPLAY_ON , CMD); //mensagem aparente cursor inativo não piscando
   LCD_cmd(SET_DDRAM | 0x00, CMD); //inicializa cursor na primeira posição a esquerda - 1a linha
 }
 
