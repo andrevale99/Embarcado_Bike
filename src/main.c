@@ -4,6 +4,9 @@
  * 
  * @brief Um embarcado simples para colocar na bicicleta.
  * Fazendo para aperfeicoar a programacao em baixo nivel
+ * 
+ * @implements Criar uma logica para nao utilizar os delay
+ * para obter os dados do DS3231 (RTC)
 */
 
 #ifndef F_CPU
@@ -86,7 +89,11 @@ int main()
 
   while (1)
   { 
-    i2c_start_bit();
+    read_data(0x02);
+    _delay_ms(100);
+    read_data(0x01);
+    _delay_ms(100);
+    read_data(0x00);
 
     refresh_data();
 
@@ -173,4 +180,5 @@ ISR(ADC_vect)
 
 ISR(TWI_vect)
 {
+  get_clock();
 }
