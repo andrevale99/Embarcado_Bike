@@ -29,13 +29,11 @@
 const char *battery_display = "BAT%:";
 const char *velocity_display = "m/s:";
 
-volatile struct Buffer
+struct Buffer
 {
-  volatile char str[16];
+  char str[16];
   volatile uint8_t size;
 } buffer;
-
-extern volatile struct ds3231_data;
 
 volatile uint8_t vel = 255;
 volatile uint32_t bat = 0;
@@ -89,11 +87,11 @@ int main()
 
   while (1)
   { 
-    read_data(0x02);
+    read_byte(0x02);
     _delay_ms(100);
-    read_data(0x01);
+    read_byte(0x01);
     _delay_ms(100);
-    read_data(0x00);
+    read_byte(0x00);
 
     refresh_data();
 
@@ -180,5 +178,5 @@ ISR(ADC_vect)
 
 ISR(TWI_vect)
 {
-  get_clock();
+  DS3231_rotine();
 }
