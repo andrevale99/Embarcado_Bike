@@ -39,6 +39,8 @@ volatile uint8_t ds3231_data[7];
 
 /**
  * @brief Le um byte do RTC
+ * 
+ * @param addr_ptr o endereco que deseja ler
 */
 void read_byte(uint8_t addr_ptr)
 {
@@ -54,7 +56,7 @@ void read_byte(uint8_t addr_ptr)
  * 
  * @note Os valores de WHAT são os enderecos
  * dos dados da memoria do RTC. Ha defines ja
- * para auxiliar qual dado deseja ler
+ * para auxiliar
 */
 uint8_t get_DS3231_data(uint8_t WHAT)
 {
