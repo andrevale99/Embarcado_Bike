@@ -82,6 +82,8 @@ int main()
   // do LCD, as frases que nao precisao ser
   // atualizadas
   writeLCD(battery_display, 5);
+  LCD_cmd(SET_DDRAM | 9, CMD);
+  writeLCD(velocity_display, 5);
 
   sei();
 
@@ -95,8 +97,6 @@ int main()
     _delay_ms(10);
 
     refresh_data();
-
-    _delay_ms(250);
   }
 
   return 0;
@@ -145,7 +145,7 @@ void refresh_data()
   LCD_cmd(RETURN_HOME, CMD);
   LCD_cmd(SECOND_LINE, CMD);
 
-  buffer.size = snprintf(buffer.str, 16, "%x:", get_DS3231_data(HOURS));
+  buffer.size = snprintf(buffer.str, 16, "    %x:", get_DS3231_data(HOURS));
   writeLCD(&buffer.str[0], buffer.size);
   buffer.size = snprintf(buffer.str, 16, "%x:", get_DS3231_data(MINUTES));
   writeLCD(&buffer.str[0], buffer.size);
