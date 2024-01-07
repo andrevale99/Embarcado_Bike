@@ -28,6 +28,9 @@
 #define MONTH 0x05
 #define YEAR 0x06
 
+#define READ_BYTE 0x01
+#define WRITE_BYTE 0x2
+
 volatile uint8_t flag_conclusion = 0;
 volatile uint8_t pointer = 0;
 
@@ -37,7 +40,7 @@ volatile struct DS3231_data
     volatile uint8_t data[3];
 }ds3231_data;
 
-void read_data(uint8_t addr_ptr)
+void read_byte(uint8_t addr_ptr)
 {
     flag_conclusion = 0;
     pointer = addr_ptr;
@@ -55,7 +58,7 @@ uint8_t IsCompleted()
  * 
  * @note Utilizado na interrupção do TWI
 */
-void get_clock()
+void DS3231_rotine()
 {
     switch (TWSR & TW_STATUS_MASK)
     {
@@ -86,7 +89,6 @@ void get_clock()
     case TW_MR_DATA_NACK:
         ds3231_data.clock[pointer] = TWDR;
         i2c_stop_bit();
-        flag_conclusion = 1;
         break; 
 
     default:
