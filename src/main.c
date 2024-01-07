@@ -88,10 +88,11 @@ int main()
   while (1)
   {
     read_byte(HOURS);
-    _delay_ms(100);
+    _delay_ms(10);
     read_byte(MINUTES);
-    _delay_ms(100);
+    _delay_ms(10);
     read_byte(SECONDS);
+    _delay_ms(10);
 
     refresh_data();
 
@@ -178,5 +179,9 @@ ISR(ADC_vect)
 
 ISR(TWI_vect)
 {
+  volatile uint8_t sreg = SREG;
+
   DS3231_rotine();
+
+  SREG = sreg;
 }
