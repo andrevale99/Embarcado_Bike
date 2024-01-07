@@ -20,9 +20,10 @@
 #define WRITE 1
 #define CMD 0
 
-#define pulseEN() _delay_us(1) ;PORTx_LCD |= (1<<EN); \
+#define pulseEN() PORTx_LCD &= ~(1<<EN); \
+                  _delay_us(1) ;PORTx_LCD |= (1<<EN); \
                   _delay_us(1); PORTx_LCD &= ~(1<<EN); \
-                  _delay_us(50);
+                  _delay_us(100);
 
 #define CLEAR_DISPLAY 0x01
 #define RETURN_HOME 0x02
@@ -76,8 +77,6 @@ void LCD_cmd(uint8_t cmd, uint8_t write_or_cmd)
   
   pulseEN()
 
-	_delay_us(200);
-
 	PORTx_LCD = (PORTx_LCD & 0xF0) | (cmd & 0x0F);  /* sending lower nibble */
 	pulseEN()
 
@@ -96,10 +95,10 @@ void init_4bitsLCD()
   DDRx_LCD |= (1<<EN) | (1<<RS) | 0x0F;
 
   _delay_ms(100); //Estabilizacao do VCC do LCD (datasheet)
-  pulseEN();
+  /*pulseEN();
   _delay_ms(10);
   pulseEN();
-  _delay_ms(10);
+  _delay_ms(10);*/
 
   LCD_cmd(BITS_4 | LINES_2, CMD); //interface de 4 bits 2 linhas (aqui se habilita as 2 linhas)
                                   //são enviados os 2 nibbles (0x2 e 0x8)
