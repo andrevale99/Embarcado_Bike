@@ -35,17 +35,33 @@
 volatile uint8_t MASK_DS3231 = IDLE_STATE;
 volatile uint8_t pointer = 0;
 
-volatile struct DS3231_data
-{
-    volatile uint8_t clock[3];
-    volatile uint8_t data[3];
-} ds3231_data;
+volatile uint8_t ds3231_data[7];
 
+/**
+ * @brief Le um byte do RTC
+*/
 void read_byte(uint8_t addr_ptr)
 {
     MASK_DS3231 = READ_BYTE;
     pointer = addr_ptr;
     i2c_start_bit();
+}
+
+/**
+ * @brief Retorna algum dado lido do DS3231
+ * 
+ * @param WHAT qual valor deseja ler
+ * 
+ * @note Os valores de WHAT são os enderecos
+ * dos dados da memoria do RTC. Ha defines ja
+ * para auxiliar qual dado deseja ler
+*/
+uint8_t get_DS3231_data(uint8_t WHAT)
+{
+    if(WHAT < 0 || WHAT > YEAR)
+        return 255;
+
+    return ds3231_data[WHAT];
 }
 
 /**
@@ -81,11 +97,10 @@ void DS3231_rotine()
         case TW_MR_SLA_ACK:
             // Confirmacao que mandou o endereco do RTC
             // no modo READ
-            //i2c_send_NACK(); // Manda um NACK
             break;
 
         case TW_MR_DATA_NACK:
-            ds3231_data.clock[pointer] = TWDR;
+            ds3231_data[pointer] = TWDR;
             MASK_DS3231 = IDLE_STATE;
             i2c_stop_bit();
             break;
