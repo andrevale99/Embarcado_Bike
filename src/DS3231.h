@@ -29,12 +29,25 @@
 #define YEAR 0x06
 
 volatile uint8_t flag_conclusion = 0;
+volatile uint8_t pointer = 0;
 
 volatile struct DS3231_data
 {
     volatile uint8_t clock[3];
     volatile uint8_t data[3];
 }ds3231_data;
+
+void read_data(uint8_t addr_ptr)
+{
+    flag_conclusion = 0;
+    pointer = addr_ptr;
+    i2c_start_bit();
+}
+
+uint8_t IsCompleted()
+{
+    return flag_conclusion;
+}
 
 /**
  * @brief Funcao para pegar somente os dados do
@@ -52,7 +65,7 @@ void get_clock()
         break;
 
     case TW_MT_SLA_ACK:
-        TWDR = SECONDS;
+        TWDR = pointer;
         break;
     
     case TW_MT_DATA_ACK:
@@ -67,17 +80,13 @@ void get_clock()
     case TW_MR_SLA_ACK:
         //Confirmacao que mandou o endereco do RTC
         //no modo READ
-        //TWCR &= ~(1<<TWEA); //Manda um NACK
-        break;
-
-    case TW_MR_DATA_ACK:
-        //Colocar logica para receber mais
-        //bytes do RTC
+        TWCR &= ~(1<<TWEA); //Manda um NACK
         break;
 
     case TW_MR_DATA_NACK:
-        ds3231_data.clock[0] = TWDR;
+        ds3231_data.clock[pointer] = TWDR;
         i2c_stop_bit();
+        flag_conclusion = 1;
         break; 
 
     default:
