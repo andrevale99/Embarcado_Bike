@@ -54,6 +54,4 @@ void i2c_stop_bit()
 {
     TWCR |= ((1<<TWINT) | (1<<TWSTO) | (1<<TWEN)) & ~(1<<TWSTA);
 }
-
-
 #endif
