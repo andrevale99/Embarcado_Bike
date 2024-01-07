@@ -1,13 +1,13 @@
 /**
  * @author Andre Menezes de Freitas Vale
  * @version 1.0.0
- * 
+ *
  * @brief Um embarcado simples para colocar na bicicleta.
  * Fazendo para aperfeicoar a programacao em baixo nivel
- * 
+ *
  * @implements Criar uma logica para nao utilizar os delay
  * para obter os dados do DS3231 (RTC)
-*/
+ */
 
 #ifndef F_CPU
 #define F_CPU 16000000UL
@@ -53,18 +53,18 @@ void ADC_setup();
 void TIMER0_setup();
 
 /**
- * @brief Funcao para atualizar 
+ * @brief Funcao para atualizar
  * os dados necessarios
-*/
+ */
 void refresh_data();
 
 /**
  * @brief Funcoes de interrupcoes
  *
- * @param ADC_vect Interrupcao do ADC. No programa esta 
- * sendo utilizado no modo AUTO TRIGGER 
+ * @param ADC_vect Interrupcao do ADC. No programa esta
+ * sendo utilizado no modo AUTO TRIGGER
  * pela comparacao com o TIMER0 e o OCR0A
- * 
+ *
  * @param TWI_vect Intterupcao do I2C (TWI). Usado para pegar
  * os dados do relogio
  */
@@ -86,12 +86,12 @@ int main()
   sei();
 
   while (1)
-  { 
-    read_byte(0x02);
+  {
+    read_byte(HOURS);
     _delay_ms(100);
-    read_byte(0x01);
+    read_byte(MINUTES);
     _delay_ms(100);
-    read_byte(0x00);
+    read_byte(SECONDS);
 
     refresh_data();
 
@@ -106,8 +106,8 @@ int main()
 void setup()
 {
   // Desativa os RX r TX do MCU para
-  //utilizar os pinos PD0 (RX) e PD1 (TX)
-  //do LCD, se n fica bugando
+  // utilizar os pinos PD0 (RX) e PD1 (TX)
+  // do LCD, se n fica bugando
   UCSR0B = 0x00;
 
   ADC_setup();
@@ -140,15 +140,15 @@ void refresh_data()
   buffer.size = snprintf(buffer.str, 16, "%d ", bat);
   LCD_cmd(SET_DDRAM | 5, CMD);
   writeLCD(&buffer.str[0], buffer.size);
-    
+
   LCD_cmd(RETURN_HOME, CMD);
   LCD_cmd(SECOND_LINE, CMD);
 
-  buffer.size = snprintf(buffer.str, 16, "%x:", ds3231_data.clock[2]);
+  buffer.size = snprintf(buffer.str, 16, "%x:", get_DS3231_data(HOURS));
   writeLCD(&buffer.str[0], buffer.size);
-  buffer.size = snprintf(buffer.str, 16, "%x:", ds3231_data.clock[1]);
+  buffer.size = snprintf(buffer.str, 16, "%x:", get_DS3231_data(MINUTES));
   writeLCD(&buffer.str[0], buffer.size);
-  buffer.size = snprintf(buffer.str, 16, "%x ", ds3231_data.clock[0]);
+  buffer.size = snprintf(buffer.str, 16, "%x ", get_DS3231_data(SECONDS));
   writeLCD(&buffer.str[0], buffer.size);
 
   LCD_cmd(RETURN_HOME, CMD);
