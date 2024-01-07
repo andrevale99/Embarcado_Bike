@@ -82,6 +82,8 @@ int main()
 
   setup();
 
+  _delay_ms(500);
+
   // Criar funcao para escrever a interface
   // do LCD, as frases que nao precisao ser
   // atualizadas
