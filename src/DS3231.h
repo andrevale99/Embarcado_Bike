@@ -7,11 +7,12 @@
  */
 
 /**
- * Organizar código para uma melhor legibilidade
+ * @implements Organizar código para uma melhor legibilidade
  * e tratamento de erros
  *
- * Como utiliza-se do snprintf para gravar no LCD
- * ha um BUG quando reseta os segundos (CORRIGIR)
+ * @implements Criar uma logica para ler de forma continua
+ * os valores do RTC sem precisar chamar a funcao
+ * read_byte varias vezes
  */
 
 #include <stdint.h>
@@ -34,14 +35,16 @@
 
 volatile uint8_t MASK_DS3231 = IDLE_STATE;
 volatile uint8_t pointer = 0;
+volatile uint8_t write_value = 0;
+volatile uint8_t write_counter = 0;
 
 volatile uint8_t ds3231_data[7];
 
 /**
  * @brief Le um byte do RTC
- * 
+ *
  * @param addr_ptr o endereco que deseja ler
-*/
+ */
 void read_byte(uint8_t addr_ptr)
 {
     MASK_DS3231 = READ_BYTE;
@@ -49,18 +52,26 @@ void read_byte(uint8_t addr_ptr)
     i2c_start_bit();
 }
 
+void write_byte(uint8_t addr_ptr, uint8_t value)
+{
+    MASK_DS3231 = WRITE_BYTE;
+    pointer = addr_ptr;
+    write_value = value;
+    i2c_start_bit();
+}
+
 /**
  * @brief Retorna algum dado lido do DS3231
- * 
+ *
  * @param WHAT qual valor deseja ler
- * 
+ *
  * @note Os valores de WHAT são os enderecos
  * dos dados da memoria do RTC. Ha defines ja
  * para auxiliar
-*/
+ */
 uint8_t get_DS3231_data(uint8_t WHAT)
 {
-    if(WHAT < 0 || WHAT > YEAR)
+    if (WHAT < 0 || WHAT > YEAR)
         return 255;
 
     return ds3231_data[WHAT];
@@ -105,6 +116,35 @@ void DS3231_rotine()
             ds3231_data[pointer] = TWDR;
             MASK_DS3231 = IDLE_STATE;
             i2c_stop_bit();
+            break;
+
+        default:
+            // Condicao para dizer que houve algum erro
+            break;
+        }
+    }
+
+    else if (MASK_DS3231 == WRITE_BYTE)
+    {
+        switch (TWSR & TW_STATUS_MASK)
+        {
+        case TW_START:
+            TWDR = DS3231_ADDR | TW_WRITE;
+            TWCR &= ~(1 << TWSTA);
+            break;
+        
+        case TW_MT_SLA_ACK:
+            TWDR = pointer;
+            break;
+
+        case TW_MT_DATA_ACK:
+            if(write_counter == 1)
+            {
+                i2c_stop_bit();
+                write_counter = 0;
+            }
+            TWDR = write_value;
+            write_counter += 1;
             break;
 
         default:
