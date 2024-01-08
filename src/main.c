@@ -155,7 +155,7 @@ void refresh_data()
   writeLCD(&buffer.str[0], buffer.size);
   buffer.size = snprintf(buffer.str, 16, "%x:", get_DS3231_data(MINUTES));
   writeLCD(&buffer.str[0], buffer.size);
-  buffer.size = snprintf(buffer.str, 16, "%x ", get_DS3231_data(SECONDS));
+  buffer.size = snprintf(buffer.str, 16, "%x   ", get_DS3231_data(SECONDS));
   writeLCD(&buffer.str[0], buffer.size);
 
   LCD_cmd(RETURN_HOME, CMD);
