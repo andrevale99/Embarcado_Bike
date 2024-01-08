@@ -178,7 +178,7 @@ void DS3231_rotine()
         }
     }
 
-    if (MASK_DS3231 == GET_CLOCK_STATE)
+    else if (MASK_DS3231 == GET_CLOCK_STATE)
     {
         switch (TWSR & TW_STATUS_MASK)
         {
