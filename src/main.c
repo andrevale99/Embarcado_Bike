@@ -95,12 +95,7 @@ int main()
 
   while (1)
   {
-    read_byte_DS3231(HOURS);
-    _delay_ms(10);
-    read_byte_DS3231(MINUTES);
-    _delay_ms(10);
-    read_byte_DS3231(SECONDS);
-    _delay_ms(10);
+    get_clock();
 
     refresh_data();
   }
