@@ -24,6 +24,9 @@
 #include "LCD.h"
 #include "DS3231.h"
 
+#define BAT_OFFSET_LCD 5
+#define CLOCK_OFFSET_LCD 4
+
 //======================================
 //  VARIAVEIS
 //======================================
@@ -137,11 +140,11 @@ void TIMER0_setup()
 void refresh_data()
 {
   buffer.size = snprintf(buffer.str, 16, "%d ", bat);
-  LCD_cmd(SET_DDRAM | 5, CMD);
+  LCD_cmd(SET_DDRAM | BAT_OFFSET_LCD, CMD);
   writeLCD(&buffer.str[0], buffer.size);
 
   LCD_cmd(RETURN_HOME, CMD);
-  LCD_cmd(SET_DDRAM | SECOND_LINE | 4, CMD);
+  LCD_cmd(SET_DDRAM | SECOND_LINE | CLOCK_OFFSET_LCD, CMD);
 
   buffer.size = snprintf(buffer.str, 16, "%x:", get_DS3231_data(HOURS));
   writeLCD(&buffer.str[0], buffer.size);
