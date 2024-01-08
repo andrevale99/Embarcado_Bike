@@ -95,11 +95,11 @@ int main()
 
   while (1)
   {
-    read_byte(HOURS);
+    read_byte_DS3231(HOURS);
     _delay_ms(10);
-    read_byte(MINUTES);
+    read_byte_DS3231(MINUTES);
     _delay_ms(10);
-    read_byte(SECONDS);
+    read_byte_DS3231(SECONDS);
     _delay_ms(10);
 
     refresh_data();
@@ -125,7 +125,7 @@ void setup()
 
 void ADC_setup()
 {
-  ADMUX = ((1 << REFS0));                                  // Referencia no AVCC
+  ADMUX = ((1 << REFS0));                                  // Referencia no AVCC e ADC0 aberto
   ADCSRA = ((1 << ADIE) | (1 << ADATE) | (0x07 << ADPS0)); // Prescale de 128 e auto trigger ativado
   ADCSRB |= (1 << ADTS1) | (1 << ADTS0);                   // Auto trigger do TIMER0 com COMPA
 
