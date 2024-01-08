@@ -33,10 +33,15 @@
 #define READ_BYTE 0x01
 #define WRITE_BYTE 0x2
 
-volatile uint8_t MASK_DS3231 = IDLE_STATE;
-volatile uint8_t pointer = 0;
-volatile uint8_t write_value = 0;
-volatile uint8_t write_counter = 0;
+volatile uint8_t MASK_DS3231 = IDLE_STATE; //Estados o qual esta (LEITURA, ESCRITA OU LIBERADO)
+volatile uint8_t pointer = 0; //Ponteiro usado como indice de um vetor
+volatile uint8_t write_value = 0; //Valor que sera escrito na memoria do RTC
+
+//Contador para escrita, pois precisa primeiro atualizar o
+//ponteiro na memoria no RTC, para depois escrever o valor que
+//deseja na memoria, ou seja, para gravar dado precisar realizar
+//duas escritas.
+volatile uint8_t write_counter = 0;  
 
 volatile uint8_t ds3231_data[7];
 
