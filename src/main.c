@@ -4,9 +4,6 @@
  *
  * @brief Um embarcado simples para colocar na bicicleta.
  * Fazendo para aperfeicoar a programacao em baixo nivel
- *
- * @implements Criar uma logica para nao utilizar os delay
- * para obter os dados do DS3231 (RTC)
  * 
  * @implements Ha um bug que o LCD as vezes nao inicializa
  * direito, nao escreve ao resetar o arduino (testado somente
