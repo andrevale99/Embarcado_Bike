@@ -45,14 +45,14 @@ volatile uint8_t ds3231_data[7];
  *
  * @param addr_ptr o endereco que deseja ler
  */
-void read_byte(uint8_t addr_ptr)
+void read_byte_DS3231(uint8_t addr_ptr)
 {
     MASK_DS3231 = READ_BYTE;
     pointer = addr_ptr;
     i2c_start_bit();
 }
 
-void write_byte(uint8_t addr_ptr, uint8_t value)
+void write_byte_DS3231(uint8_t addr_ptr, uint8_t value)
 {
     MASK_DS3231 = WRITE_BYTE;
     pointer = addr_ptr;
