@@ -78,7 +78,7 @@ void GPIOx_setup();
  * @brief Escreve as coisas que nao precisam
  * ficar atualizandos tipo as strings
  * battery_diplay e velocity_display
-*/
+ */
 void escrever_interface();
 
 /**
@@ -235,26 +235,26 @@ void rotina_ecrita_relogio()
   {
     writeLCD("HOR", 3);
     LCD_cmd(SECOND_LINE, CMD);
-  } while (PIND & PIND1);
+  } while (PIND & (1 << PIND1));
 
-  while (!(PIND & PIND1))
+  while (!(PIND & (1 << PIND1)))
     ;
   do
   {
     writeLCD("MIN", 3);
     LCD_cmd(SECOND_LINE, CMD);
-  } while (PIND & PIND1);
+  } while (PIND & (1 << PIND1));
 
-  while (!(PIND & PIND1))
+  while (!(PIND & (1 << PIND1)))
     ;
 
   do
   {
     writeLCD("SEC", 3);
     LCD_cmd(SECOND_LINE, CMD);
-  } while (PIND & PIND1);
+  } while (PIND & (1 << PIND1));
 
-  while (!(PIND & PIND1))
+  while (!(PIND & (1 << PIND1)))
     ;
 
   _delay_ms(2000);
