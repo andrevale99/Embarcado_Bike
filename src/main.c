@@ -235,14 +235,17 @@ void rotina_ecrita_relogio()
   {
     writeLCD("HOR", 3);
     LCD_cmd(SECOND_LINE, CMD);
+    //Ler potenciometro para ajustar as horas
   } while (PIND & (1 << PIND1));
 
   while (!(PIND & (1 << PIND1)))
     ;
+
   do
   {
     writeLCD("MIN", 3);
     LCD_cmd(SECOND_LINE, CMD);
+    //Ler potenciometro para ajustar os minutos
   } while (PIND & (1 << PIND1));
 
   while (!(PIND & (1 << PIND1)))
@@ -252,6 +255,7 @@ void rotina_ecrita_relogio()
   {
     writeLCD("SEC", 3);
     LCD_cmd(SECOND_LINE, CMD);
+    //Ler potenciometro para ajustar os segundos
   } while (PIND & (1 << PIND1));
 
   while (!(PIND & (1 << PIND1)))
