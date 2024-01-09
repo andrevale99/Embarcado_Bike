@@ -30,7 +30,7 @@
 #define WRITE_BYTE_STATE 0x2
 #define GET_CLOCK_STATE 0x03
 
-volatile uint8_t MASK_DS3231 = IDLE_STATE; // Estados o qual esta (LEITURA, ESCRITA OU LIBERADO)
+volatile uint8_t MASK_DS3231 = IDLE_STATE; // Estados o qual estado
 volatile uint8_t pointer = 0;              // Ponteiro usado como indice de um vetor
 volatile uint8_t write_value = 0;          // Valor que sera escrito na memoria do RTC
 
