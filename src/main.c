@@ -5,9 +5,9 @@
  * @brief Um embarcado simples para colocar na bicicleta.
  * Fazendo para aperfeicoar a programacao em baixo nivel
  * 
- * @implements Ha um bug que o LCD as vezes nao inicializa
- * direito, nao escreve ao resetar o arduino (testado somente
- * em protoboard)
+ * @implements Ha um problema de ruido no butao
+ * colocar alguma logica no programa ou componente
+ * no butao para filtrar o ruido
  */
 
 #ifndef F_CPU
@@ -25,9 +25,13 @@
 #include "DS3231.h"
 
 #define BAT_OFFSET_LCD 5
+#define VEL_OFFSET_LCD 13
 #define CLOCK_OFFSET_LCD 4
-#define CONF_BUTTON PD0
-#define OK_BUTTON PD1
+
+#define BUTTONS_DDRx DDRD
+#define BUTTONS_PORTx PORTD
+#define BUTTON_CONF PD0
+#define BUTTON_OK PD1
 //======================================
 //  VARIAVEIS
 //======================================
@@ -48,9 +52,9 @@ volatile uint32_t bat = 0;
 /**
  * @brief Funcao que chama as outras funcoes
  * de setup
- * 
+ *
  * @note Serve mais para organizacao
-*/
+ */
 void setup();
 
 /**
@@ -65,7 +69,7 @@ void TIMER0_setup();
 
 /**
  * @brief Configuracoes dos GPIOS
-*/
+ */
 void GPIOx_setup();
 
 /**
@@ -83,7 +87,7 @@ void refresh_data();
  *
  * @param TWI_vect Intterupcao do I2C (TWI). Usado para pegar
  * os dados do relogio
- * 
+ *
  * @param PCINT2_vect Interrupcao na mudanca de estado
  * dos pinos PCINT23...16 (PD7...PD0)
  */
@@ -156,13 +160,23 @@ void TIMER0_setup()
 
 void GPIOx_setup()
 {
+  // Coloca os butoes como inputs e com o
+  // pull-ups ativados
+  BUTTONS_DDRx &= ~((1 << BUTTON_CONF) | (1 << BUTTON_OK));
+  BUTTONS_PORTx |= ((1 << BUTTON_CONF) | (1 << BUTTON_OK));
 
+  PCICR |= (1 << PCIE2);
+  PCMSK2 |= (1 << PCINT16) | (1 << PCINT17);
 }
 
 void refresh_data()
 {
   buffer.size = snprintf(buffer.str, 16, "%d ", bat);
   LCD_cmd(SET_DDRAM | BAT_OFFSET_LCD, CMD);
+  writeLCD(&buffer.str[0], buffer.size);
+
+  buffer.size = snprintf(buffer.str, 16, "%d ", vel);
+  LCD_cmd(SET_DDRAM | VEL_OFFSET_LCD, CMD);
   writeLCD(&buffer.str[0], buffer.size);
 
   LCD_cmd(RETURN_HOME, CMD);
@@ -213,6 +227,8 @@ ISR(PCINT2_vect)
 {
   volatile uint8_t sreg = SREG;
 
+  if (!(PIND & (1 << PIND0)))
+    vel += 1;
 
   SREG = sreg;
 }
