@@ -1,6 +1,6 @@
 /**
  * @author Andre Menezes de Freitas Vale
- * @version 1.0.0
+ * @version 1.1.0
  *
  * @brief Um embarcado simples para colocar na bicicleta.
  * Fazendo para aperfeicoar a programacao em baixo nivel
@@ -44,6 +44,12 @@ volatile uint32_t bat = 0;
 //======================================
 //  PROTOTIPOS
 //======================================
+/**
+ * @brief Funcao que chama as outras funcoes
+ * de setup
+ * 
+ * @note Serve mais para organizacao
+*/
 void setup();
 
 /**
