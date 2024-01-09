@@ -4,7 +4,7 @@
  *
  * @brief Um embarcado simples para colocar na bicicleta.
  * Fazendo para aperfeicoar a programacao em baixo nivel
- * 
+ *
  * @implements Ha um problema de ruido no butao
  * colocar alguma logica no programa ou componente
  * no butao para filtrar o ruido
@@ -46,6 +46,8 @@ struct Buffer
 
 volatile uint8_t vel = 255;
 volatile uint32_t bat = 0;
+
+void (*f)();
 //======================================
 //  PROTOTIPOS
 //======================================
@@ -73,10 +75,29 @@ void TIMER0_setup();
 void GPIOx_setup();
 
 /**
+ * @brief Escreve as coisas que nao precisam
+ * ficar atualizandos tipo as strings
+ * battery_diplay e velocity_display
+*/
+void escrever_interface();
+
+/**
  * @brief Funcao para atualizar
  * os dados necessarios
  */
 void refresh_data();
+
+/**
+ * @brief Rotina Inicial, mostra os dados
+ * de relogio, bateria e velocidade
+ */
+void rotina_principal();
+
+/**
+ * @brief Para escrever/corrigir as horas
+ * do relogio
+ */
+void rotina_ecrita_relogio();
 
 /**
  * @brief Funcoes de interrupcoes
@@ -102,22 +123,17 @@ int main()
 
   setup();
 
-  _delay_ms(500);
+  _delay_ms(200);
 
-  // Criar funcao para escrever a interface
-  // do LCD, as frases que nao precisao ser
-  // atualizadas
-  writeLCD(battery_display, 5);
-  LCD_cmd(SET_DDRAM | 9, CMD);
-  writeLCD(velocity_display, 4);
+  f = &rotina_principal;
+
+  escrever_interface();
 
   sei();
 
   while (1)
   {
-    get_clock();
-
-    refresh_data();
+    f();
   }
 
   return 0;
@@ -169,13 +185,22 @@ void GPIOx_setup()
   PCMSK2 |= (1 << PCINT16) | (1 << PCINT17);
 }
 
+void escrever_interface()
+{
+  LCD_cmd(RETURN_HOME, CMD);
+  LCD_cmd(CLEAR_DISPLAY, CMD);
+  writeLCD(battery_display, 5);
+  LCD_cmd(SET_DDRAM | 9, CMD);
+  writeLCD(velocity_display, 4);
+}
+
 void refresh_data()
 {
   buffer.size = snprintf(buffer.str, 16, "%d ", bat);
   LCD_cmd(SET_DDRAM | BAT_OFFSET_LCD, CMD);
   writeLCD(&buffer.str[0], buffer.size);
 
-  buffer.size = snprintf(buffer.str, 16, "%d ", vel);
+  buffer.size = snprintf(buffer.str, 16, "%d  ", vel);
   LCD_cmd(SET_DDRAM | VEL_OFFSET_LCD, CMD);
   writeLCD(&buffer.str[0], buffer.size);
 
@@ -190,6 +215,53 @@ void refresh_data()
   writeLCD(&buffer.str[0], buffer.size);
 
   LCD_cmd(RETURN_HOME, CMD);
+}
+
+void rotina_principal()
+{
+  get_clock();
+  refresh_data();
+}
+
+void rotina_ecrita_relogio()
+{
+  LCD_cmd(CLEAR_DISPLAY, CMD);
+  LCD_cmd(RETURN_HOME, CMD);
+
+  writeLCD("ESCRITA RELOGIO", 15);
+  LCD_cmd(SECOND_LINE, CMD);
+
+  do
+  {
+    writeLCD("HOR", 3);
+    LCD_cmd(SECOND_LINE, CMD);
+  } while (PIND & PIND1);
+
+  while (!(PIND & PIND1))
+    ;
+  do
+  {
+    writeLCD("MIN", 3);
+    LCD_cmd(SECOND_LINE, CMD);
+  } while (PIND & PIND1);
+
+  while (!(PIND & PIND1))
+    ;
+
+  do
+  {
+    writeLCD("SEC", 3);
+    LCD_cmd(SECOND_LINE, CMD);
+  } while (PIND & PIND1);
+
+  while (!(PIND & PIND1))
+    ;
+
+  _delay_ms(2000);
+
+  escrever_interface();
+
+  f = &rotina_principal;
 }
 
 ISR(ADC_vect)
@@ -228,7 +300,7 @@ ISR(PCINT2_vect)
   volatile uint8_t sreg = SREG;
 
   if (!(PIND & (1 << PIND0)))
-    vel += 1;
+    f = &rotina_ecrita_relogio;
 
   SREG = sreg;
 }
