@@ -26,7 +26,8 @@
 
 #define BAT_OFFSET_LCD 5
 #define CLOCK_OFFSET_LCD 4
-
+#define CONF_BUTTON PD0
+#define OK_BUTTON PD1
 //======================================
 //  VARIAVEIS
 //======================================
@@ -63,6 +64,11 @@ void ADC_setup();
 void TIMER0_setup();
 
 /**
+ * @brief Configuracoes dos GPIOS
+*/
+void GPIOx_setup();
+
+/**
  * @brief Funcao para atualizar
  * os dados necessarios
  */
@@ -77,9 +83,13 @@ void refresh_data();
  *
  * @param TWI_vect Intterupcao do I2C (TWI). Usado para pegar
  * os dados do relogio
+ * 
+ * @param PCINT2_vect Interrupcao na mudanca de estado
+ * dos pinos PCINT23...16 (PD7...PD0)
  */
 ISR(ADC_vect);
 ISR(TWI_vect);
+ISR(PCINT2_vect);
 //======================================
 //  MAIN
 //======================================
@@ -120,6 +130,7 @@ void setup()
 
   ADC_setup();
   TIMER0_setup();
+  GPIOx_setup();
   init_4bitsLCD();
   init_i2c();
 }
@@ -141,6 +152,11 @@ void TIMER0_setup()
   TCCR0B |= (1 << CS02) | (1 << (1 << CS00)); // Prescale de 256
 
   OCR0A = 25;
+}
+
+void GPIOx_setup()
+{
+
 }
 
 void refresh_data()
@@ -189,6 +205,14 @@ ISR(TWI_vect)
   volatile uint8_t sreg = SREG;
 
   DS3231_rotine();
+
+  SREG = sreg;
+}
+
+ISR(PCINT2_vect)
+{
+  volatile uint8_t sreg = SREG;
+
 
   SREG = sreg;
 }
